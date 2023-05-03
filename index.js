@@ -179,35 +179,62 @@ function EnCokGolAtan(data) {
 	const finaller = data.filter(final => {
 		return final.Stage === 'Final'
 	});
-	let takımİsimleriGolleriHome = [];
-	let takımİsimleriGolleriAway = [];
+	let takımİsimleri = {};
 	for(let i = 0; i<finaller.length; i++){
-		takımİsimleriGolleriHome.push(finaller[i]['Home Team Initials'] + ': ' + finaller[i]['Home Team Goals']);
-		takımİsimleriGolleriAway.push(finaller[i]['Away Team Initials'] + ': ' + finaller[i]['Away Team Goals']);
-	}
-	const takımİsimleriGolleri = takımİsimleriGolleriHome.concat(takımİsimleriGolleriAway)
-	
-	const goller = takımİsimleriGolleri.map(isimler => {
-		const nesne = {
-			'isimler[0]i+simler[1]+isimler[2]' : isimler[5]
+		if (finaller[i]['Home Team Name'] in takımİsimleri){
+		 	takımİsimleri[finaller[i]['Home Team Name']] += finaller[i]['Home Team Goals'];
+		}else{
+			takımİsimleri[finaller[i]['Home Team Name']] = finaller[i]['Home Team Goals'];
 		}
-		return nesne
+		if (finaller[i]['Away Team Name'] in takımİsimleri){
+		 	takımİsimleri[finaller[i]['Away Team Name']] += finaller[i]['Away Team Goals'];
+		}else{
+			takımİsimleri[finaller[i]['Away Team Name']] = finaller[i]['Away Team Goals'];
+		}
 	}
-	)
-
-	return  takımİsimleriGolleri
+	let golSayisi = 0;
+	let takimAdi;
+	for(let key in takımİsimleri){
+		if(takımİsimleri[key] > golSayisi){
+			golSayisi = takımİsimleri[key]
+			takimAdi = key ;
+		}
+	}
+	return  {takimAdi, golSayisi}
 }
 console.log(EnCokGolAtan(fifaData))
 
 /*  BONUS 3: 
 EnKotuDefans() adında bir fonksiyon yazın, `data` yı parametre olarak alsın ve Dünya kupasında finallerinde en çok golü yiyen takımı döndürsün*/
 
-function EnKotuDefans(/* kodlar buraya */) {
-	
-    /* kodlar buraya */
-	
+function EnKotuDefans(data) {
+	const finaller = data.filter(final => {
+		return final.Stage === 'Final'
+	});
+	let takımİsimleri = {};
+	for(let i = 0; i<finaller.length; i++){
+		if (finaller[i]['Home Team Name'] in takımİsimleri){
+		 	takımİsimleri[finaller[i]['Home Team Name']] += finaller[i]['Away Team Goals'];
+		}else{
+			takımİsimleri[finaller[i]['Home Team Name']] = finaller[i]['Away Team Goals'];
+		}
+		if (finaller[i]['Away Team Name'] in takımİsimleri){
+		 	takımİsimleri[finaller[i]['Away Team Name']] += finaller[i]['Home Team Goals'];
+		}else{
+			takımİsimleri[finaller[i]['Away Team Name']] = finaller[i]['Home Team Goals'];
+		}
+	}
+	let golSayisi = 0;
+	let takimAdi;
+	for(let key in takımİsimleri){
+		if(takımİsimleri[key] > golSayisi){
+			golSayisi = takımİsimleri[key]
+			takimAdi = key ;
+		}
+	}
+	return  {takimAdi, golSayisi}
 }
-
+console.log(EnKotuDefans(fifaData))
 
 /* Hala vaktiniz varsa, README dosyasında listelenen hedeflerden istediğinizi aşağıdaki boşluğa yazabilirsiniz. */
 
